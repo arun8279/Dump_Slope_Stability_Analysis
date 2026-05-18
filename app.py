@@ -11,6 +11,47 @@ from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 
+import streamlit as st
+import pandas as pd
+import os
+
+st.title("Dump Slope Stability Analyzer")
+
+# 1. Create the UI File Uploader
+uploaded_file = st.file_uploader("Upload your Master Datasheet", type=["xlsx", "csv"])
+
+# 2. Check if the user has uploaded a file through the browser
+if uploaded_file is not None:
+    try:
+        # Read the file directly from the browser buffer
+        if uploaded_file.name.endswith('.xlsx'):
+            df = pd.read_excel(uploaded_file)
+        else:
+            df = pd.read_csv(uploaded_file)
+            
+        st.success(f"✅ Loaded: {uploaded_file.name}")
+        st.dataframe(df.head()) # Displays your real data
+        
+        # --- Run your ML model prediction logic here ---
+        
+    except Exception as e:
+        st.error(f"Error reading the uploaded file: {e}")
+
+# 3. Fallback Option (Only runs if NO file is uploaded yet)
+else:
+    st.info("💡 Please upload your 'Master datasheet.xlsx' file above to begin calculation.")
+    
+    # Optional: If you STILL want a backup placeholder so the app isn't blank:
+    st.warning("No file uploaded yet. Showing placeholder template structure below:")
+    placeholder_data = {
+        'cohesion': [15.0, 12.5, 20.0],
+        'friction_angle': [25.0, 28.0, 22.0],
+        'slope_angle': [35.0, 40.0, 30.0],
+        'height': [20.0, 25.0, 15.0]
+    }
+    df_placeholder = pd.DataFrame(placeholder_data)
+    st.dataframe(df_placeholder)
+
 GLOBAL_SEED = 42
 
 def enforce_absolute_determinism(seed=42):
