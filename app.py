@@ -195,6 +195,32 @@ def plot_feature_importances(models_dict, feature_names):
 
 
 # 6. STREAMLIT APPLICATION UI
+import streamlit as st
+import pandas as pd
+
+# 1. Create the upload box on the screen
+uploaded_file = st.file_uploader(
+    label="Upload your geotechnical dataset", 
+    type=["csv", "xlsx"]  # Restricts users to only these file extensions
+)
+
+# 2. Check if a user has actually uploaded a file yet
+if uploaded_file is not None:
+    try:
+        # 3. Read the file into a Pandas DataFrame based on its file extension
+        if uploaded_file.name.endswith('.csv'):
+            df = pd.read_csv(uploaded_file)
+        else:
+            df = pd.read_excel(uploaded_file)
+            
+        # 4. Show a success message and display the first few rows of data
+        st.success("File uploaded successfully!")
+        st.dataframe(df.head())  # Interactive table widget
+        
+    except Exception as e:
+        st.error(f"Error reading file: {e}")
+
+
 
 st.set_page_config(layout="wide", page_title="Hyperparameter Optimized GBR Predictor")
 
