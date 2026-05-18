@@ -1,8 +1,4 @@
 streamlit
-pandas
+joblib
 numpy
-scikit-learn
-matplotlib
-seaborn
-mealpy
-openpyxl
+pandas
